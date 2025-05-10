@@ -1,0 +1,31 @@
+services:
+  images_manager:
+    build:
+      context: .
+      dockerfile: all_microservices/images_manager/Dockerfile
+    ports:
+      - "5000:5000"
+    networks:
+      - app-network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:5000/" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+  neural_net:
+    build:
+      context: .
+      dockerfile: all_microservices/Neural_net/Dockerfile
+    ports:
+      - "5001:5001"
+    networks:
+      - app-network
+    # healthcheck:
+    #   test: [ "CMD", "curl", "-f", "http://localhost:5001/" ]
+    #   interval: 10s
+    #   timeout: 5s
+    #   retries: 3
+
+networks:
+  app-network:
+    driver: bridge
