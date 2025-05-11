@@ -2,6 +2,8 @@ from PIL import Image, UnidentifiedImageError
 import numpy as np
 import os
 
+np.random.seed(42)
+
 images_are_loaded = False
 images = []
 outputs = []
@@ -25,5 +27,8 @@ for i in range(10):
 
 images = np.array(images)
 outputs = np.array(outputs)
+indexes = np.random.permutation(len(images))
+images = images[indexes]
+outputs = outputs[indexes]
 images_are_loaded = True
 print(f"Images found: {len(images)}")

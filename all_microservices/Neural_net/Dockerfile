@@ -1,9 +1,28 @@
-FROM python:3.9-slim
+# Этап 1: Сборка зависимостей (кэшируемый слой)
+FROM python:3.9-slim AS builder
 WORKDIR /app
-COPY all_microservices/Neural_net/ /app/
 COPY requirements.txt /app/
 RUN apt-get update && apt-get install -y curl && \
     pip install --no-cache-dir -r requirements.txt && \
     pip cache purge
-EXPOSE 5001
-CMD ["uvicorn", "endpoints:app", "--host", "0.0.0.0", "--port", "5001"]
+
+# Этап 2: Финальный образ
+FROM python:3.9-slim
+WORKDIR /app
+COPY --from=builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
+COPY all_microservices/Neural_net/ /app/
+RUN apt-get update && apt-get install -y curl
+
+# Настройка пользователя
+RUN useradd -m myuser
+USER myuser
+
+# Переменные окружения
+ENV PORT=5001
+
+EXPOSE $PORT
+HEALTHCHECK --interval=10s --timeout=5s --retries=3 \
+    CMD curl -f http://localhost:$PORT/ || exit 1
+
+CMD uvicorn endpoints:app --host 0.0.0.0 --port $PORT

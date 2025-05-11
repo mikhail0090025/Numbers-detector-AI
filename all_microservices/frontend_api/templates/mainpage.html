@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mainpage</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <script src="/static/script.js"></script>
+</head>
+
+<body>
+    <div>
+        <h2>Learn</h2>
+        {% for j in range(1, 10) %}
+        {% for i in range(5) %}
+        <button onclick="go_epochs({{ (10 ** i) * j }})">Go {{ (10 ** i) * j }} epochs</button>
+        {% endfor %}
+        <br>
+        {% endfor %}
+    </div>
+    <div>
+        <h2>History</h2>
+        <table>
+            <thead>
+                <th>Epoch</th>
+                <th>Loss</th>
+                <th>Validation Loss</th>
+                <th>Accuracy</th>
+                <th>Validation Accuracy</th>
+            </thead>
+            <tbody>
+                {% for item in history %}
+                <tr>
+                    <td>{{ item[0] }}</td>
+                    <td>{{ "%.3f"|format(item[1]) }}</td>
+                    <td>{{ "%.3f"|format(item[2]) }}</td>
+                    <td>{{ "%.3f"|format(item[3]) }}</td>
+                    <td>{{ "%.3f"|format(item[4]) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

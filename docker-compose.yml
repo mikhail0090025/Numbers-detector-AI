@@ -7,6 +7,8 @@ services:
       - "5000:5000"
     networks:
       - app-network
+    volumes:
+      - ./all_microservices/images_manager:/app
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:5000/" ]
       interval: 10s
@@ -20,11 +22,21 @@ services:
       - "5001:5001"
     networks:
       - app-network
+    volumes:
+      - ./all_microservices/Neural_net:/app
     # healthcheck:
     #   test: [ "CMD", "curl", "-f", "http://localhost:5001/" ]
     #   interval: 10s
     #   timeout: 5s
     #   retries: 3
+  frontend_api:
+    build:
+      context: .
+      dockerfile: all_microservices/frontend_api/Dockerfile
+    ports:
+      - "5002:5002"
+    networks:
+      - app-network
 
 networks:
   app-network:
