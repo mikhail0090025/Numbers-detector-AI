@@ -1,20 +1,25 @@
 button {
     background: green;
     padding: 20px;
-    font-size: 20px;
+    font-size: 14px;
+    font-family: 'Consolas';
+    color: white;
+    border: 3px solid black;
+    border-radius: 10px;
+}
+
+button:hover {
+    transition: 200ms;
+    background: lightblue;
+    padding: 18px;
+    font-size: 16px;
     font-family: 'Consolas';
     color: black;
     border: 3px solid black;
     border-radius: 10px;
 }
 
-button:hover {
-    transition: 500ms;
-    background: lightgreen;
-    padding: 25px;
-    font-size: 20px;
-    font-family: 'Consolas';
-    color: black;
-    border: 4px solid black;
-    border-radius: 25px;
+th td {
+    padding: 5px;
+    border: 2px solid black;
 }
