@@ -37,6 +37,14 @@ services:
       - "5002:5002"
     networks:
       - app-network
+  graphics_manager:
+    build:
+      context: .
+      dockerfile: all_microservices/graphics_manager/Dockerfile
+    ports:
+      - "5003:5003"
+    networks:
+      - app-network
 
 networks:
   app-network:

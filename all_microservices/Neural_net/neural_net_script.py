@@ -8,7 +8,7 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 weights_path = "./my_checkpoint.weights.h5"
 input_shape = (100, 100, 3)
-start_lr = 0.0001
+start_lr = 0.00005
 all_losses = []
 all_val_losses = []
 all_accuracies = []
@@ -16,17 +16,17 @@ all_val_accuracies = []
 
 def create_model():
     model = keras.Sequential([
-        keras.layers.Conv2D(32, (3,3), activation="relu", input_shape=input_shape),
-        # keras.layers.BatchNormalization(),
+        keras.layers.Conv2D(32, (5,5), activation="elu", input_shape=input_shape),
+        keras.layers.BatchNormalization(),
         keras.layers.MaxPooling2D((2,2)),
         keras.layers.Dropout(0.2),
-        keras.layers.Conv2D(64, (3,3), activation="relu"),
-        # keras.layers.BatchNormalization(),
+        keras.layers.Conv2D(64, (5,5), activation="elu"),
+        keras.layers.BatchNormalization(),
         keras.layers.MaxPooling2D((2,2)),
         keras.layers.GlobalAveragePooling2D(),
         keras.layers.Dropout(0.2),
-        keras.layers.Dense(64, activation="relu", kernel_regularizer=keras.regularizers.l2(0.01)),
-        # keras.layers.BatchNormalization(),
+        keras.layers.Dense(64, activation="elu", kernel_regularizer=keras.regularizers.l2(0.001)),
+        keras.layers.BatchNormalization(),
         keras.layers.Dropout(0.3),
         keras.layers.Dense(10, activation="softmax")
     ])

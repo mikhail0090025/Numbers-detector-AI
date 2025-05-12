@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y curl
 RUN useradd -m myuser
 USER myuser
 
-ENV PORT=5000
+ENV PORT=5003
 
 EXPOSE $PORT
 HEALTHCHECK --interval=10s --timeout=5s --retries=3 \
