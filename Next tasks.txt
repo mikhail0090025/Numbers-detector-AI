@@ -1,3 +1,4 @@
-- Add augmentation
+- Add augmentation                              DONE
 - Add graphics (in a separate microservice)
 - Make UI more userfriendly
+- Add saving                                    DONE

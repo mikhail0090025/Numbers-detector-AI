@@ -4,8 +4,9 @@ import numpy as np
 import requests
 import io
 import time
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
-weights_path = "./checkpoints/my_checkpoint.weights.h5"
+weights_path = "./my_checkpoint.weights.h5"
 input_shape = (100, 100, 3)
 start_lr = 0.0001
 all_losses = []
@@ -18,18 +19,27 @@ def create_model():
         keras.layers.Conv2D(32, (3,3), activation="relu", input_shape=input_shape),
         # keras.layers.BatchNormalization(),
         keras.layers.MaxPooling2D((2,2)),
+        keras.layers.Dropout(0.2),
         keras.layers.Conv2D(64, (3,3), activation="relu"),
         # keras.layers.BatchNormalization(),
         keras.layers.MaxPooling2D((2,2)),
-        keras.layers.Flatten(),
-        keras.layers.Dense(512, activation="relu", kernel_regularizer=keras.regularizers.l2(0.01)),
+        keras.layers.GlobalAveragePooling2D(),
+        keras.layers.Dropout(0.2),
+        keras.layers.Dense(64, activation="relu", kernel_regularizer=keras.regularizers.l2(0.01)),
         # keras.layers.BatchNormalization(),
         keras.layers.Dropout(0.3),
         keras.layers.Dense(10, activation="softmax")
     ])
 
+    try:
+        model.load_weights(weights_path)
+        print("Saved model was loaded")
+    except FileNotFoundError as e:
+        print(f"No model was saved in path {weights_path}. New will be created")
     optimizer = keras.optimizers.Adam(learning_rate=start_lr)
     model.compile(optimizer=optimizer, loss="categorical_crossentropy", metrics=['accuracy'])
+
+    model.summary()
 
     return model
 
@@ -55,7 +65,7 @@ while attempt < max_attempts:
         print(f"Connection error: {e}")
     attempt += 1
     print(f"Attempt {attempt}/{max_attempts}. Waiting for images_manager...")
-    time.sleep(10)  # Увеличил интервал до 10 секунд
+    time.sleep(10)
 
 if attempt >= max_attempts:
     raise Exception("Failed to connect to images_manager after max attempts")
@@ -71,9 +81,43 @@ outputs = np.array(outputs)
 print(f"Images count in dataset: {len(images)}")
 
 def go_epochs(epochs_count: int = 10):
-    print(f"Images shape: {images.shape}")
-    print(f"Outputs shape: {outputs.shape}")
-    history = model.fit(images, outputs, epochs=epochs_count, callbacks=[], validation_split=0.2,shuffle=True,batch_size=32)
+    datagen = ImageDataGenerator(
+        rotation_range=45,
+        width_shift_range=0.2,
+        height_shift_range=0.2,
+        brightness_range=[0.8, 1.2],
+        horizontal_flip=True,
+        fill_mode='nearest',
+        validation_split=0.2
+    )
+    val_datagen = ImageDataGenerator(validation_split=0.2)
+    train_generator = datagen.flow(
+        images,
+        outputs,
+        batch_size=256,
+        subset='training',
+        shuffle=True
+    )
+    val_generator = val_datagen.flow(
+        images,
+        outputs,
+        batch_size=256,
+        subset='validation',
+        shuffle=False
+    )
+    SaveCheckpoint = tf.keras.callbacks.ModelCheckpoint(weights_path,
+                                     monitor='val_accuracy',
+                                     verbose=1,
+                                     save_best_only=True,
+                                     save_weights_only=True,
+                                     mode='auto',
+                                     save_freq='epoch')
+    history = model.fit(
+        train_generator,
+        epochs=epochs_count,
+        validation_data=val_generator,
+        callbacks=[SaveCheckpoint]
+    )
     all_losses.extend(history.history['loss'])
     all_val_losses.extend(history.history['val_loss'])
     all_accuracies.extend(history.history['accuracy'])

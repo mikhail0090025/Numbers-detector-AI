@@ -1,3 +1,4 @@
 __pycache__
 *.pyc
 archive
+all_microservices/Neural_net/my_checkpoint.weights.h5
