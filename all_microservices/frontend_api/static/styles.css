@@ -1,6 +1,6 @@
 button {
     background: green;
-    padding: 20px;
+    padding: 10px;
     font-size: 14px;
     font-family: 'Consolas';
     color: white;
@@ -11,7 +11,7 @@ button {
 button:hover {
     transition: 200ms;
     background: lightblue;
-    padding: 18px;
+    padding: 8px;
     font-size: 16px;
     font-family: 'Consolas';
     color: black;

@@ -8,7 +8,7 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 weights_path = "./my_checkpoint.weights.h5"
 input_shape = (100, 100, 3)
-start_lr = 0.00005
+start_lr = 0.00001
 all_losses = []
 all_val_losses = []
 all_accuracies = []
@@ -16,18 +16,18 @@ all_val_accuracies = []
 
 def create_model():
     model = keras.Sequential([
-        keras.layers.Conv2D(32, (5,5), activation="elu", input_shape=input_shape),
+        keras.layers.Conv2D(32, (3,3), activation="elu", input_shape=input_shape),
         keras.layers.BatchNormalization(),
         keras.layers.MaxPooling2D((2,2)),
-        keras.layers.Dropout(0.2),
-        keras.layers.Conv2D(64, (5,5), activation="elu"),
+        keras.layers.Dropout(0.1),
+        keras.layers.Conv2D(64, (3,3), activation="elu"),
         keras.layers.BatchNormalization(),
         keras.layers.MaxPooling2D((2,2)),
         keras.layers.GlobalAveragePooling2D(),
-        keras.layers.Dropout(0.2),
+        keras.layers.Dropout(0.1),
         keras.layers.Dense(64, activation="elu", kernel_regularizer=keras.regularizers.l2(0.001)),
         keras.layers.BatchNormalization(),
-        keras.layers.Dropout(0.3),
+        keras.layers.Dropout(0.1),
         keras.layers.Dense(10, activation="softmax")
     ])
 
@@ -82,11 +82,11 @@ print(f"Images count in dataset: {len(images)}")
 
 def go_epochs(epochs_count: int = 10):
     datagen = ImageDataGenerator(
-        rotation_range=45,
-        width_shift_range=0.2,
-        height_shift_range=0.2,
-        brightness_range=[0.8, 1.2],
-        horizontal_flip=True,
+        rotation_range=20,
+        width_shift_range=0.1,
+        height_shift_range=0.1,
+        brightness_range=[0.9, 1.1],
+        horizontal_flip=False,
         fill_mode='nearest',
         validation_split=0.2
     )
@@ -94,16 +94,19 @@ def go_epochs(epochs_count: int = 10):
     train_generator = datagen.flow(
         images,
         outputs,
-        batch_size=256,
+        batch_size=512,
         subset='training',
         shuffle=True
     )
     val_generator = val_datagen.flow(
         images,
         outputs,
-        batch_size=256,
+        batch_size=512,
         subset='validation',
         shuffle=False
+    )
+    lr_scheduler = keras.callbacks.ReduceLROnPlateau(
+        monitor='val_loss', factor=0.5, patience=3, min_lr=1e-6
     )
     SaveCheckpoint = tf.keras.callbacks.ModelCheckpoint(weights_path,
                                      monitor='val_accuracy',
@@ -116,7 +119,7 @@ def go_epochs(epochs_count: int = 10):
         train_generator,
         epochs=epochs_count,
         validation_data=val_generator,
-        callbacks=[SaveCheckpoint]
+        callbacks=[SaveCheckpoint, lr_scheduler]
     )
     all_losses.extend(history.history['loss'])
     all_val_losses.extend(history.history['val_loss'])

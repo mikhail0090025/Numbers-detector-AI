@@ -18,17 +18,19 @@
         <br>
         {% endfor %}
     </div>
-    <div>
-        <h2>Graphic</h2>
-        <img src="http://localhost:5003/graphics" alt="" width="80%" height="auto">
+    <div style="display: flex;">
+        <div style="width: 60%;">
+            <h2>Graphic</h2>
+            <img src="http://localhost:5003/graphics" alt="" width="80%" height="auto">
+        </div>
+        <div style="width: 35%;">
+            <h2>Test</h2>
+            <input type="text" placeholder="Image URL..." id="url_test_image">
+            <button id="test_button">Go!</button>
+            <p id="test_result"></p>
+        </div>
     </div>
-    <div>
-        <h2>Test</h2>
-        <input type="text" placeholder="Image URL..." id="url_test_image">
-        <button id="test_button">Go!</button>
-        <p id="test_result"></p>
-    </div>
-    <div>
+    <div style="display: inline-block;">
         <h2>Current metrics</h2>
         <table>
             <thead>
@@ -54,7 +56,7 @@
             </tbody>
         </table>
     </div>
-    <div>
+    <div style="display: inline-block;">
         <h2>History</h2>
         <table>
             <thead>

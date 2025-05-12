@@ -1,5 +1,5 @@
 - Add augmentation                              DONE
 - Add graphics (in a separate microservice)     DONE
-- Make UI more userfriendly
+- Make UI more userfriendly                     DONE
 - Add saving                                    DONE
 - Simple CI/CD
