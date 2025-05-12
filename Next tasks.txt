@@ -2,3 +2,4 @@
 - Add graphics (in a separate microservice)
 - Make UI more userfriendly
 - Add saving                                    DONE
+- Simple CI/CD
