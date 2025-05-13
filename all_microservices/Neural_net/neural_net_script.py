@@ -8,7 +8,7 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 weights_path = "./my_checkpoint.weights.h5"
 input_shape = (100, 100, 3)
-start_lr = 0.00001
+start_lr = 1e-4
 all_losses = []
 all_val_losses = []
 all_accuracies = []
@@ -19,15 +19,19 @@ def create_model():
         keras.layers.Conv2D(32, (3,3), activation="elu", input_shape=input_shape),
         keras.layers.BatchNormalization(),
         keras.layers.MaxPooling2D((2,2)),
-        keras.layers.Dropout(0.1),
+        #keras.layers.Dropout(0.1),
         keras.layers.Conv2D(64, (3,3), activation="elu"),
         keras.layers.BatchNormalization(),
         keras.layers.MaxPooling2D((2,2)),
-        keras.layers.GlobalAveragePooling2D(),
-        keras.layers.Dropout(0.1),
-        keras.layers.Dense(64, activation="elu", kernel_regularizer=keras.regularizers.l2(0.001)),
+        keras.layers.Conv2D(128, (3,3), activation="elu"),
         keras.layers.BatchNormalization(),
-        keras.layers.Dropout(0.1),
+        keras.layers.MaxPooling2D((2,2)),
+        #keras.layers.GlobalAveragePooling2D(),
+        keras.layers.Flatten(),
+        #keras.layers.Dropout(0.1),
+        keras.layers.Dense(512, activation="elu", kernel_regularizer=keras.regularizers.l2(0.0001)),
+        keras.layers.BatchNormalization(),
+        #keras.layers.Dropout(0.05),
         keras.layers.Dense(10, activation="softmax")
     ])
 
@@ -82,11 +86,12 @@ print(f"Images count in dataset: {len(images)}")
 
 def go_epochs(epochs_count: int = 10):
     datagen = ImageDataGenerator(
-        rotation_range=20,
-        width_shift_range=0.1,
-        height_shift_range=0.1,
+        rotation_range=10,
+        width_shift_range=0.05,
+        height_shift_range=0.05,
         brightness_range=[0.9, 1.1],
         horizontal_flip=False,
+        zoom_range=0.1,
         fill_mode='nearest',
         validation_split=0.2
     )
@@ -106,7 +111,7 @@ def go_epochs(epochs_count: int = 10):
         shuffle=False
     )
     lr_scheduler = keras.callbacks.ReduceLROnPlateau(
-        monitor='val_loss', factor=0.5, patience=3, min_lr=1e-6
+        monitor='val_accuracy', factor=0.5, patience=3, min_lr=1e-6
     )
     SaveCheckpoint = tf.keras.callbacks.ModelCheckpoint(weights_path,
                                      monitor='val_accuracy',

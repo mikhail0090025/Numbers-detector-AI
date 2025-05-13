@@ -20,7 +20,7 @@ def get_images():
             folder_path = os.path.join(folder, f"Sample{i}")
             print(f"folder_path: {folder_path}")
             all_files = os.listdir(folder_path)
-            for filename in all_files[:100]:
+            for filename in all_files[:50]:
                 try:
                     path = os.path.join(folder_path, filename)
                     print(f"Path: {path}")
