@@ -24,6 +24,7 @@ def get_images():
     else:
         print("Dataset was not found. Downloading...")
         download_dataset()
+        os.system("tree")
 
     global images, outputs, images_are_loaded
     for folder in all_folders:
