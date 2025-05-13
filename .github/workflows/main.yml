@@ -15,9 +15,7 @@ jobs:
     steps:
       - name: Install Docker
         run: |
-          sudo apt update
-          sudo apt upgrade -y
-          sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
+          sudo apt install -y apt-transport-https ca-certificates curl software-properties-common tree
           sudo apt update
           sudo apt install -y docker-ce docker-ce-cli containerd.io
           sudo systemctl start docker
@@ -25,6 +23,7 @@ jobs:
           sudo curl -L "https://github.com/docker/compose/releases/download/v2.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose --version
+          tree
 
       - name: Build Docker images
         run: docker-compose -f docker-compose.yml build
