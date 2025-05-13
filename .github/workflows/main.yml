@@ -36,10 +36,15 @@ jobs:
 
       - name: Check services
         run: |
-          sleep 30  # Даём время на старт
-          { curl -f http://localhost:5001/; echo "Service on port 5001 has successfully started"; } || { echo "Service on port 5001 couldn't start"; exit 1; }
-          { curl -f http://localhost:5002/; echo "Service on port 5002 has successfully started"; } || { echo "Service on port 5002 couldn't start"; exit 1; }
-          { curl -f http://localhost:5003/; echo "Service on port 5003 has successfully started"; } || { echo "Service on port 5003 couldn't start"; exit 1; }
-          { curl -f http://localhost:5000/; echo "Service on port 5000 has successfully started"; } || { echo "Service on port 5000 couldn't start"; exit 1; }
+          sleep 90  # Даём время на старт
+          if curl -f http://localhost:5001/; then echo "Service on port 5001 has successfully started"; else echo "Service on port 5001 couldn't start"; exit 1; fi
+          if curl -f http://localhost:5002/; then echo "Service on port 5002 has successfully started"; else echo "Service on port 5002 couldn't start"; exit 1; fi
+          if curl -f http://localhost:5003/; then echo "Service on port 5003 has successfully started"; else echo "Service on port 5003 couldn't start"; exit 1; fi
+          if curl -f http://localhost:5000/; then echo "Service on port 5000 has successfully started"; else echo "Service on port 5000 couldn't start"; exit 1; fi
+
+      - name: Show logs on failure
+        if: failure()
+        run: docker-compose logs images_manager
+
       - name: Stop Docker containers
         run: docker-compose -f docker-compose.yml down
