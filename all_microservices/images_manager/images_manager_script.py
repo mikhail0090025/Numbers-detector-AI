@@ -5,7 +5,7 @@ from pathlib import Path
 import requests
 import tarfile
 import shutil
-
+###
 np.random.seed(42)
 
 images_are_loaded = False
