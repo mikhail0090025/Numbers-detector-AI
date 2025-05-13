@@ -14,8 +14,8 @@ outputs = []
 all_folders = [
     os.path.join("archive", "numbers", "chars74k_png", "GoodImg"),
     os.path.join("archive", "numbers", "chars74k_png", "BadImag"),
-    os.path.join("archive", "numbers", "chars74k_png", "Fnt"),
-    os.path.join("archive", "numbers", "chars74k_png", "Hnd"),
+    # os.path.join("archive", "numbers", "chars74k_png", "Fnt"),
+    # os.path.join("archive", "numbers", "chars74k_png", "Hnd"),
 ]
 
 def get_images():
@@ -31,7 +31,7 @@ def get_images():
             folder_path = os.path.join(folder, f"Sample{i}")
             print(f"folder_path: {folder_path}")
             all_files = os.listdir(folder_path)
-            for filename in all_files[:50]:
+            for filename in all_files[:20000]:
                 try:
                     path = os.path.join(folder_path, filename)
                     print(f"Path: {path}")

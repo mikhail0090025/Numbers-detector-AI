@@ -19,7 +19,12 @@ button:hover {
     border-radius: 10px;
 }
 
-th td {
+td {
+    padding: 5px;
+    border: 2px solid black;
+}
+
+th {
     padding: 5px;
     border: 2px solid black;
 }

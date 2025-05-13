@@ -37,8 +37,9 @@ jobs:
       - name: Check services
         run: |
           sleep 10  # Даём время на старт
-          curl -f http://localhost:5001/ || exit 1
-          curl -f http://localhost:5002/ || exit 1
-
+          curl -f http://localhost:5000/ || { echo "Service on port 5000 couldn't start"; exit 1; }
+          curl -f http://localhost:5001/ || { echo "Service on port 5001 couldn't start"; exit 1; }
+          curl -f http://localhost:5002/ || { echo "Service on port 5002 couldn't start"; exit 1; }
+          curl -f http://localhost:5003/ || { echo "Service on port 5003 couldn't start"; exit 1; }
       - name: Stop Docker containers
         run: docker-compose -f docker-compose.yml down
