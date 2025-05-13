@@ -12,7 +12,7 @@
     <div>
         <h2>Learn</h2>
         {% for j in range(1, 10) %}
-        {% for i in range(5) %}
+        {% for i in range(3) %}
         <button onclick="go_epochs({{ (10 ** i) * j }})">Go {{ (10 ** i) * j }} epochs</button>
         {% endfor %}
         <br>

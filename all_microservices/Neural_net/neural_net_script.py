@@ -19,19 +19,19 @@ def create_model():
         keras.layers.Conv2D(32, (3,3), activation="elu", input_shape=input_shape),
         keras.layers.BatchNormalization(),
         keras.layers.MaxPooling2D((2,2)),
-        #keras.layers.Dropout(0.1),
+        keras.layers.Dropout(0.1),
         keras.layers.Conv2D(64, (3,3), activation="elu"),
         keras.layers.BatchNormalization(),
         keras.layers.MaxPooling2D((2,2)),
         keras.layers.Conv2D(128, (3,3), activation="elu"),
         keras.layers.BatchNormalization(),
         keras.layers.MaxPooling2D((2,2)),
-        #keras.layers.GlobalAveragePooling2D(),
-        keras.layers.Flatten(),
-        #keras.layers.Dropout(0.1),
-        keras.layers.Dense(512, activation="elu", kernel_regularizer=keras.regularizers.l2(0.0001)),
+        keras.layers.GlobalAveragePooling2D(),
+        #keras.layers.Flatten(),
+        keras.layers.Dropout(0.1),
+        keras.layers.Dense(256, activation="elu", kernel_regularizer=keras.regularizers.l2(0.0001)),
         keras.layers.BatchNormalization(),
-        #keras.layers.Dropout(0.05),
+        keras.layers.Dropout(0.05),
         keras.layers.Dense(10, activation="softmax")
     ])
 
@@ -99,22 +99,22 @@ def go_epochs(epochs_count: int = 10):
     train_generator = datagen.flow(
         images,
         outputs,
-        batch_size=512,
+        batch_size=64,
         subset='training',
         shuffle=True
     )
     val_generator = val_datagen.flow(
         images,
         outputs,
-        batch_size=512,
+        batch_size=64,
         subset='validation',
         shuffle=False
     )
     lr_scheduler = keras.callbacks.ReduceLROnPlateau(
-        monitor='val_accuracy', factor=0.5, patience=3, min_lr=1e-6
+        monitor='accuracy', factor=0.5, patience=3, min_lr=1e-6
     )
     SaveCheckpoint = tf.keras.callbacks.ModelCheckpoint(weights_path,
-                                     monitor='val_accuracy',
+                                     monitor='accuracy',
                                      verbose=1,
                                      save_best_only=True,
                                      save_weights_only=True,
