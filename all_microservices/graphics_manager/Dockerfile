@@ -12,8 +12,7 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 COPY all_microservices/graphics_manager/ /app/
 RUN apt-get update && apt-get install -y curl
 
-RUN useradd -m myuser
-USER myuser
+USER root
 
 ENV PORT=5003
 

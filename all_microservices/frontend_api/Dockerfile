@@ -13,8 +13,7 @@ COPY all_microservices/frontend_api/ /app/
 # COPY static/ /app/static/
 RUN apt-get update && apt-get install -y curl
 
-RUN useradd -m myuser
-USER myuser
+USER root
 
 EXPOSE 5002
 HEALTHCHECK --interval=10s --timeout=5s --retries=3 \

@@ -29,22 +29,22 @@ jobs:
           tree
 
       - name: Build Docker images
-        run: docker-compose -f docker-compose.yml build
+        run: sudo docker-compose -f docker-compose.yml build
 
       - name: Run Docker containers
-        run: docker-compose -f docker-compose.yml up -d
+        run: sudo docker-compose -f docker-compose.yml up -d
 
       - name: Check services
         run: |
-          sleep 90  # Даём время на старт
-          if curl -f http://localhost:5001/; then echo "Service on port 5001 has successfully started"; else echo "Service on port 5001 couldn't start"; exit 1; fi
-          if curl -f http://localhost:5002/; then echo "Service on port 5002 has successfully started"; else echo "Service on port 5002 couldn't start"; exit 1; fi
-          if curl -f http://localhost:5003/; then echo "Service on port 5003 has successfully started"; else echo "Service on port 5003 couldn't start"; exit 1; fi
-          if curl -f http://localhost:5000/; then echo "Service on port 5000 has successfully started"; else echo "Service on port 5000 couldn't start"; exit 1; fi
+          sudo sleep 90  # Даём время на старт
+          sudo if curl -f http://localhost:5001/; then echo "Service on port 5001 has successfully started"; else echo "Service on port 5001 couldn't start"; exit 1; fi
+          sudo if curl -f http://localhost:5002/; then echo "Service on port 5002 has successfully started"; else echo "Service on port 5002 couldn't start"; exit 1; fi
+          sudo if curl -f http://localhost:5003/; then echo "Service on port 5003 has successfully started"; else echo "Service on port 5003 couldn't start"; exit 1; fi
+          sudo if curl -f http://localhost:5000/; then echo "Service on port 5000 has successfully started"; else echo "Service on port 5000 couldn't start"; exit 1; fi
 
       - name: Show logs on failure
         if: failure()
-        run: docker-compose logs images_manager
+        run: sudo docker-compose logs images_manager
 
       - name: Stop Docker containers
-        run: docker-compose -f docker-compose.yml down
+        run: sudo docker-compose -f docker-compose.yml down
