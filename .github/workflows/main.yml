@@ -13,23 +13,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout кода
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Install Docker
+        run: |
+          sudo apt update
+          sudo apt upgrade -y
+          sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
+          sudo apt update
+          sudo apt install -y docker-ce docker-ce-cli containerd.io
+          sudo systemctl start docker
+          sudo systemctl enable docker
+          docker-compose --version
 
-      # 2. Настройка Docker
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      # 4. Собираем все сервисы
       - name: Build Docker images
         run: docker-compose -f docker-compose.yml build
 
-      # 5. Запускаем контейнеры
       - name: Run Docker containers
         run: docker-compose -f docker-compose.yml up -d
 
-      # 6. Проверяем доступность сервисов (опционально)
       - name: Check services
         run: |
           sleep 10  # Даём время на старт
@@ -38,6 +38,5 @@ jobs:
           curl -f http://localhost:5002/ || exit 1
           curl -f http://localhost:5003/ || exit 1
 
-      # 7. Останавливаем контейнеры
       - name: Stop Docker containers
         run: docker-compose -f docker-compose.yml down
