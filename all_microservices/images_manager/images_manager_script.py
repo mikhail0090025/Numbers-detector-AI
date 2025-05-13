@@ -24,7 +24,6 @@ def get_images():
     else:
         print("Dataset was not found. Downloading...")
         download_dataset()
-        os.system("tree")
 
     global images, outputs, images_are_loaded
     for folder in all_folders:
@@ -61,7 +60,6 @@ def download_dataset():
     extract_path = "archive/numbers/chars74k_png"
 
     if not Path("archive").is_dir():
-        print("Dataset was not found. Downloading...")
         # Скачиваем файл
         response = requests.get(url, stream=True)
         if response.status_code == 200:
