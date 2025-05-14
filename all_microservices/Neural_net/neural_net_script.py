@@ -16,27 +16,18 @@ all_val_accuracies = []
 
 def create_model():
     model = keras.Sequential([
-        keras.layers.Conv2D(32, (3,3), activation="elu", input_shape=input_shape),
+        keras.layers.Conv2D(64, (3,3), activation="elu", input_shape=input_shape),
         keras.layers.BatchNormalization(),
-        keras.layers.MaxPooling2D((2,2)),
-        keras.layers.Dropout(0.1),
         keras.layers.Conv2D(64, (3,3), activation="elu"),
         keras.layers.BatchNormalization(),
-        keras.layers.MaxPooling2D((2,2)),
-        keras.layers.Dropout(0.1),
-        keras.layers.Conv2D(128, (3,3), activation="elu"),
+        keras.layers.Conv2D(64, (3,3), activation="elu"),
         keras.layers.BatchNormalization(),
-        keras.layers.MaxPooling2D((2,2)),
-        keras.layers.Dropout(0.1),
-        keras.layers.Conv2D(256, (3,3), activation="elu"),
-        keras.layers.BatchNormalization(),
-        keras.layers.MaxPooling2D((2,2)),
         keras.layers.GlobalAveragePooling2D(),
-        #keras.layers.Flatten(),
-        keras.layers.Dropout(0.1),
-        keras.layers.Dense(256, activation="elu", kernel_regularizer=keras.regularizers.l2(0.0001)),
+        # keras.layers.Flatten(),
+        keras.layers.Dense(512, activation="elu", kernel_regularizer=keras.regularizers.l2(0.0001)),
         keras.layers.BatchNormalization(),
-        keras.layers.Dropout(0.05),
+        keras.layers.Dense(128, activation="elu", kernel_regularizer=keras.regularizers.l2(0.0001)),
+        keras.layers.BatchNormalization(),
         keras.layers.Dense(10, activation="softmax")
     ])
 

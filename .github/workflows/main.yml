@@ -35,7 +35,7 @@ jobs:
 
       - name: Check services
         run: |
-          sleep 90  # Даём время на старт
+          sleep 90  # Time for start
           if curl -f http://localhost:5001/; then echo "Service on port 5001 has successfully started"; else echo "Service on port 5001 couldn't start"; exit 1; fi
           if curl -f http://localhost:5002/; then echo "Service on port 5002 has successfully started"; else echo "Service on port 5002 couldn't start"; exit 1; fi
           if curl -f http://localhost:5003/; then echo "Service on port 5003 has successfully started"; else echo "Service on port 5003 couldn't start"; exit 1; fi
