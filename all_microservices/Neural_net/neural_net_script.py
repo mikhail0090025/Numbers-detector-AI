@@ -7,7 +7,7 @@ import time
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 weights_path = "./my_checkpoint.weights.h5"
-input_shape = (70, 70, 3)
+input_shape = (40, 40, 3)
 start_lr = 1e-4
 all_losses = []
 all_val_losses = []
@@ -16,30 +16,37 @@ all_val_accuracies = []
 
 def create_model():
     model = keras.Sequential([
-        keras.layers.Conv2D(64, (3,3), activation="elu", input_shape=input_shape),
-        keras.layers.BatchNormalization(),
-        keras.layers.Conv2D(64, (3,3), activation="elu"),
-        keras.layers.BatchNormalization(),
-        keras.layers.Conv2D(64, (3,3), activation="elu"),
-        keras.layers.BatchNormalization(),
-        keras.layers.GlobalAveragePooling2D(),
-        # keras.layers.Flatten(),
-        keras.layers.Dense(512, activation="elu", kernel_regularizer=keras.regularizers.l2(0.0001)),
-        keras.layers.BatchNormalization(),
-        keras.layers.Dense(128, activation="elu", kernel_regularizer=keras.regularizers.l2(0.0001)),
-        keras.layers.BatchNormalization(),
+        keras.layers.Conv2D(32, (3,3), activation="relu"),
+        keras.layers.MaxPooling2D((2, 2), strides=(2, 2)),
+        keras.layers.Dropout(0.1),
+        keras.layers.Conv2D(64, (3,3), activation="relu"),
+        keras.layers.MaxPooling2D((2, 2), strides=(2, 2)),
+        keras.layers.Dropout(0.1),
+        keras.layers.Conv2D(128, (3,3), activation="relu"),
+        keras.layers.MaxPooling2D((2, 2), strides=(2, 2)),
+        keras.layers.Flatten(),
+        keras.layers.Dropout(0.1),
+        keras.layers.Dense(2048, activation="relu"),
+        keras.layers.Dropout(0.1),
+        keras.layers.Dense(256, activation="relu"),
+        keras.layers.Dropout(0.1),
+        keras.layers.Dense(64, activation="relu"),
+        keras.layers.Dropout(0.1),
+        keras.layers.Dense(32, activation="relu"),
         keras.layers.Dense(10, activation="softmax")
     ])
+
+    optimizer = keras.optimizers.Adam(learning_rate=start_lr)
+    model.compile(optimizer=optimizer, loss="categorical_crossentropy", metrics=['accuracy'])
+    model.summary()
 
     try:
         model.load_weights(weights_path)
         print("Saved model was loaded")
     except FileNotFoundError as e:
         print(f"No model was saved in path {weights_path}. New will be created")
-    optimizer = keras.optimizers.Adam(learning_rate=start_lr)
-    model.compile(optimizer=optimizer, loss="categorical_crossentropy", metrics=['accuracy'])
-
-    model.summary()
+    except Exception as e:
+        print(f"Weights were not loaded ({e}). New will be created")
 
     return model
 

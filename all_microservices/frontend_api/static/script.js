@@ -50,3 +50,27 @@ document.getElementById('test_button').addEventListener('click', () => {
     const urlInput = document.getElementById('url_test_image');
     makePrediction(urlInput.value);
 });
+
+async function ShowModelSize() {
+    try {
+        const response = await fetch(`http://localhost:5001/model_size`);
+        var data = await response.json();
+        if (response.ok) {
+            data = JSON.parse(data);
+            console.log(data);
+            console.log(typeof data);
+
+            const answer = data.size;
+            document.getElementById('model_size').innerText = answer == 'None' ? 'Unknown' : answer;
+        } else {
+            console.error("Error:", data.error);
+            alert(`Error: ${data.error}`);
+        }
+    } catch (error) {
+        document.getElementById('model_size').innerText = "Couldnt define model size: " + error;
+        console.error("Fetch error:", error);
+        alert("Failed to fetch image");
+    }
+}
+
+ShowModelSize();

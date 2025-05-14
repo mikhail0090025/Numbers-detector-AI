@@ -7,6 +7,7 @@ import requests
 from urllib.parse import quote
 import json
 import io
+import os
 
 app = FastAPI()
 
@@ -19,9 +20,31 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+def getSize(fileobject):
+    fileobject.seek(0,2) # move the cursor to the end of the file
+    size = fileobject.tell()
+    return size
+
 @app.get("/")
 def root():
     return Response("This is a root of neural net manager", status_code=200)
+
+@app.get("/model_size")
+def root():
+    if not os.path.isfile(NNS.weights_path):
+        return JSONResponse(json.dumps({'size': 'None'}), status_code=200)
+    file = open(NNS.weights_path, 'rb')
+    size = getSize(file)
+    if size < 1024:
+        return JSONResponse(json.dumps({'size': str(size) + " B"}), status_code=200)
+    elif size < 1024*1024:
+        return JSONResponse(json.dumps({'size': str(round(size / 1024)) + " KB"}), status_code=200)
+    elif size < 1024*1024*1024:
+        return JSONResponse(json.dumps({'size': str(round(size / (1024 * 1024))) + " MB"}), status_code=200)
+    elif size < 1024*1024*1024*1024:
+        return JSONResponse(json.dumps({'size': str(round(size / (1024 * 1024 * 1024))) + " GB"}), status_code=200)
+    else:
+        return JSONResponse(json.dumps({'size': str(size) + " B"}), status_code=200)
 
 @app.post("/go_epochs")
 async def go_epochs(epochs_count: int = Form(default=10)):

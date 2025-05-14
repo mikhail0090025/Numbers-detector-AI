@@ -38,8 +38,8 @@ def get_images():
                     print(f"Path: {path}")
                     img = Image.open(path)
                     img = img.convert("RGB")
-                    img_resized = img.resize((70, 70), Image.Resampling.LANCZOS)
-                    img_array = np.array(img_resized) / 255.0
+                    img_resized = img.resize((40, 40), Image.Resampling.LANCZOS)
+                    img_array = (np.array(img_resized) / 127.5) - 1
                     images.append(img_array)
                     outputs.append([0] * 10)
                     outputs[-1][i-1] = 1
