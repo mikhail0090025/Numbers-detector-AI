@@ -7,15 +7,13 @@ import tarfile
 import shutil
 ###
 np.random.seed(42)
-
+# archive\numbers\chars74k_png\English\Img\BadImag\Bmp
 images_are_loaded = False
 images = []
 outputs = []
 all_folders = [
-    os.path.join("archive", "numbers", "chars74k_png", "GoodImg"),
-    os.path.join("archive", "numbers", "chars74k_png", "BadImag"),
-    # os.path.join("archive", "numbers", "chars74k_png", "Fnt"),
-    # os.path.join("archive", "numbers", "chars74k_png", "Hnd"),
+    os.path.join("archive", "numbers", "chars74k_png", "English", "Img", "BadImag", "Bmp"),
+    os.path.join("archive", "numbers", "chars74k_png", "English", "Img", "GoodImg", "Bmp"),
 ]
 
 def get_images():
@@ -27,8 +25,11 @@ def get_images():
 
     global images, outputs, images_are_loaded
     for folder in all_folders:
-        for i in range(10):
-            folder_path = os.path.join(folder, f"Sample{i}")
+        for i in range(1, 11):
+            if i == 10:
+                folder_path = os.path.join(folder, f"Sample010")
+            else:
+                folder_path = os.path.join(folder, f"Sample00{i}")
             print(f"folder_path: {folder_path}")
             all_files = os.listdir(folder_path)
             for filename in all_files[:20000]:
@@ -37,11 +38,11 @@ def get_images():
                     print(f"Path: {path}")
                     img = Image.open(path)
                     img = img.convert("RGB")
-                    img_resized = img.resize((100, 100), Image.Resampling.LANCZOS)
+                    img_resized = img.resize((70, 70), Image.Resampling.LANCZOS)
                     img_array = np.array(img_resized) / 255.0
                     images.append(img_array)
                     outputs.append([0] * 10)
-                    outputs[-1][i] = 1
+                    outputs[-1][i-1] = 1
                 except UnidentifiedImageError:
                     print(f"Error loading {path}: not an image, skipping")
                     continue

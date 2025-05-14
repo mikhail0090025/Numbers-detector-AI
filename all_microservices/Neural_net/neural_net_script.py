@@ -7,7 +7,7 @@ import time
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 weights_path = "./my_checkpoint.weights.h5"
-input_shape = (100, 100, 3)
+input_shape = (70, 70, 3)
 start_lr = 1e-4
 all_losses = []
 all_val_losses = []
